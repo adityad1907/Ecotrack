@@ -9,14 +9,53 @@
 
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_4hrNpve1ITND9TgdSwClNVfE2ZnJifs",
+      authDomain: "ecotrack-7398a.firebaseapp.com",
+      databaseURL: "https://ecotrack-7398a-default-rtdb.firebaseio.com",
+      projectId: "ecotrack-7398a",
+      storageBucket: "ecotrack-7398a.firebasestorage.app",
+      messagingSenderId: "884509507640",
+      appId: "1:884509507640:web:93da36f6d7bd261307e6cd",
+      measurementId: "G-JW36DZ1ZEM"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const firebaseDB = firebase.database();
+
+    window.firebaseDB = firebaseDB;
+
+    window.fbSaveUser = function(username, points, treesPlanted, badgeLabel) {
+      firebaseDB.ref('leaderboard/' + username).set({
+        name: username,
+        points: points,
+        treesPlanted: treesPlanted,
+        badge: badgeLabel,
+        timestamp: Date.now()
+      }).catch(e => console.warn("Firebase save failed:", e));
+    };
+
+    window.fbListenLeaderboard = function(callback) {
+      firebaseDB.ref('leaderboard').on('value', snapshot => {
+        const data = snapshot.val();
+        callback(data ? Object.values(data) : []);
+      });
+    };
+
+    window.fbOffLeaderboard = function() {
+      firebaseDB.ref('leaderboard').off();
+    };
+  </script>
 </head>
 <body>
-
   <div id="root"></div>
-
   <script type="text/babel" src="app.js"></script>
-
 </body>
 </html>
