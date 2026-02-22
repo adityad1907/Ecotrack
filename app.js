@@ -47,7 +47,7 @@ const THRESHOLDS = {
   MIN_SAPLING_YOUNG: 0.01,
   MIN_SOIL:          0.01,
   MIN_SAPLING_GREEN: 0.03,
-  MAX_SAPLING_GREEN: 0.55,
+  MAX_SAPLING_GREEN: 0.28,
 };
 
 const verifyTreeImage = (imageSrc) => new Promise((resolve) => {
@@ -450,7 +450,7 @@ function DashboardPage({ user, db, persist, showNotify, currentUser, allUsers })
     setVerResult({ status: "loading" });
 
     const result      = await verifyTreeImage(preview);
-    const isApproved  = result.isSapling && result.confidence > 0.05;
+    const isApproved  = result.isSapling && result.confidence > 0.12;
     const pointsDelta = isApproved ? 10 : -5;
     const newPoints   = Math.max(0, user.points + pointsDelta);
     const newTrees    = isApproved ? user.treesPlanted + 1 : user.treesPlanted;
